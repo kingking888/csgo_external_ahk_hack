@@ -1,5 +1,5 @@
-﻿#Include classMemory.ahk
-#Include csgo offset.ahk
+#Include <classMemory>
+#Include <csgo offsets>
 #NoEnv
 #Persistent
 #SingleInstance, Force
@@ -9,6 +9,11 @@ SetMouseDelay, -1
 SendMode Input
 SetBatchLines,-1
 ListLines, Off
+
+if !Read_csgo_offsets_from_hazedumper() {
+	MsgBox, 48, Error!, Failed to get csgo offsets
+    ExitApp
+}
 
 if (_ClassMemory.__Class != "_ClassMemory") {
     msgbox class memory not correctly installed. Or the (global class) variable "_ClassMemory" has been overwritten
@@ -35,7 +40,7 @@ Loop {
 				if (LocalPlayer.Team != dwEntity.Team)  {
 					Glow(glowobj, dwEntity.GlowIndex, 240, 0, 0, 180)
 				} else {
-					Glow(glowobj, dwEntity.GlowIndex, 0, 0, 240, 150)
+					Glow(glowobj, dwEntity.GlowIndex, 0, 0, 240, 180)
 				}
 			} else {
 				Glow(glowobj, dwEntity.GlowIndex, 240, 240, 240, 180)
