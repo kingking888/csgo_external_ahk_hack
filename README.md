@@ -3,6 +3,7 @@ Ahk external glow hack for csgo.
 
 ## Features
 * Glow
+* Chams
 
 ## Screenshot
 ![image](https://github.com/worse-666/csgo_external_ahk_glow/blob/main/screenshot_.png)
