@@ -1,5 +1,5 @@
 # csgo_external_ahk
-Ahk external glow hack for csgo.
+Ahk external hack for csgo.
 
 ## Features
 * Glow
