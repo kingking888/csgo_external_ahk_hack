@@ -1,5 +1,5 @@
-﻿#Include <classMemory>
-#Include <csgo offsets>
+#Include classMemory.ahk
+#Include csgo offsets.ahk
 #Include imgui.ahk
 #NoEnv
 #Persistent
