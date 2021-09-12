@@ -331,13 +331,9 @@ Glow(glowObj, glowInd, r, g, b, a) {
 	,NumPut(g/255, Glow_Struct, 0x4, "Float")
 	,NumPut(b/255, Glow_Struct, 0x8, "Float")
 	,NumPut(a/255, Glow_Struct, 0xC, "Float")
-	,csgo.writeRaw(glowObj+(glowInd*0x38)+0x8, &Glow_Struct, 16)
-	;,csgo.write(glowObj+(glowInd*0x38)+0x20, 1, "Float")
-	,csgo.write(glowObj+(glowInd*0x38)+0x28, 1, "UChar")
-	,csgo.write(glowObj+(glowInd*0x38)+0x29, 0, "UChar")
-	;,csgo.write(glowObj+(glowInd*0x38)+0x30, 2, "Uint")
-	;,csgo.write(glowObj+(glowInd*0x38)+0x23, 255, "Uint")
-	;msgbox % csgo.read(glowObj+(glowInd*0x38)+0x1C, "Uint")
+	csgo.writeRaw(glowObj+(glowInd*0x38)+0x8, &Glow_Struct, 16)
+	csgo.write(glowObj+(glowInd*0x38)+0x28, 1, "UChar")
+	csgo.write(glowObj+(glowInd*0x38)+0x29, 0, "UChar")
 }
 
 chams(dwEntity, r, g, b) {
