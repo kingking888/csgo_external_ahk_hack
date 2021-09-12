@@ -18,7 +18,7 @@ Ahk external hack for csgo.
 * Disable Post-Processing
 * Bullet Impacts
 
-
+### misc
 * Auto Bhop
 * Auto Pistol
 * Auto Reload
