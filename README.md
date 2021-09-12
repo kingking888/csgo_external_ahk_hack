@@ -3,7 +3,7 @@ Ahk external hack for csgo.
 
 ## Features
 
-
+### visuals
 * Glow
 * Weapon Glow
 * Chams
