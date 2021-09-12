@@ -17,7 +17,7 @@ Ahk external hack for csgo.
 * RCS
 
 ## Screenshot
-![image](https://github.com/worse-666/csgo_external_ahk_glow/blob/main/screenshot_.png)
+![image](https://github.com/worse-666/csgo_external_ahk_hack/blob/main/screen%20shot.png)
 
 ## GUI
 ![image](https://github.com/worse-666/csgo_external_ahk_glow/blob/main/setting%20gui.png)
