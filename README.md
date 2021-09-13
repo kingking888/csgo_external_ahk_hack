@@ -9,9 +9,11 @@ Ahk external hack for csgo.
 * Chams
 * Model Brightness
 * FOV Changer
+* Aspect Ratio Changer
 * Anti Flash
 * No Smoke (Not working)
 * Remove Hands
+* Remove View Punch
 * Radar reveal
 * Force Crosshair
 * Grenade Prediction
