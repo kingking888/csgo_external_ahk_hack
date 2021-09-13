@@ -23,10 +23,12 @@ if (_ClassMemory.__Class != "_ClassMemory") {
     ExitApp
 }
 
+
 ;cl_grenadepreview              ;0xDAD3C8 152=off 151=on
 ;sv_showimpacts                 ;0xDA60C0 144=off 145=on
 ;weapon_debug_spread_show       ;0xDAF358 40=off 43=on
-;weapon_recoil_view_punch_extra ;0xDA6534 822568200=off 208020134=on
+;weapon_recoil_view_punch_extra ;0xDA6534 820798728=off 227353254=on
+;view_recoil_tracking           ;0xD83FCC 820658080=off 235690438=on
 ;r_drawothermodels              ;0xD84C88 89=off 90=on
 ;mp_weapons_glow_on_ground      ;0xDA2F40 16=off 17=on
 ;mat_postprocess_enable         ;0xD98F40 16=off 17=on
@@ -40,6 +42,9 @@ Global engine := csgo.getModuleBaseAddress("engine.dll")
 
 pattern := csgo.hexStringToPattern("A3 ?? ?? ?? ?? 57 8B CB")
 Global smokecount := csgo.read(csgo.modulePatternScan("client.dll", pattern*)+0x1, "Uint")
+
+
+
 
 
 
@@ -80,6 +85,8 @@ Global chams_local_color_g := 0
 Global chams_local_color_b := 0
 
 Global fov_changer_value := 90
+
+Global aspect_ratio_value := 1.777777
 
 Global enable_dont_render := 1
 
@@ -125,7 +132,12 @@ Loop {
 			,dwEntity_Dormant := GetDormant(dwEntity)
 			,dwEntity_GlowIndex := GetGlowIndex(dwEntity)
 			,dwEntity_ClassId := GetClassId(dwEntity)
+			;,dwEntity_SpottedByMask := GetSpottedByMask(dwEntity)
+			;,dwEntity_WeaponIndex := GetWeaponIndex(dwEntity)
 
+			;if (dwEntity_WeaponIndex=7) {
+			;	msgbox % dwEntity
+			;}
 
 			if (dwEntity=0 || dwEntity=LocalPlayer || !dwEntity_IsAlive || dwEntity_Dormant)
 				Continue
@@ -172,7 +184,14 @@ Loop {
 		csgo.write(client + 0xDA2F40, enable_weapon_glow ? 17:16, "UChar")
 
 		SetModelBrightness(enable_model_brightness ? model_brightness_value:0)
+		;----------------------------Balance the Brightness--------------------------------
+		;,ViewModelHandler := csgo.read(LocalPlayer + m_hViewModel, "Uint")
+		;,CurrentViewModelEntity := csgo.read(client + dwEntityList + ((ViewModelHandler & 0xFFF) - 1) * 16, "Uint")
+		;,NewNormalColor := (model_brightness_value=0) ? 255:255 / (model_brightness_value/10)
+		;,chams(CurrentViewModelEntity, NewNormalColor, NewNormalColor, NewNormalColor)
 
+		if enable_aspect_ratio_changer
+			SetAspectRatio(aspect_ratio_value)
 
 		csgo.write(LocalPlayer + m_iDefaultFOV, enable_fov_changer ? fov_changer_value:90, "Uint") ;fov changer
 
@@ -181,6 +200,9 @@ Loop {
 		csgo.write(smokecount, enable_no_smoke ? 0:, "Uint") ;no smoke
 
 		csgo.write(LocalPlayer + 0x258, enable_remove_hands ? 0:340, "Uint") ;remove hands
+
+		csgo.write(client + 0xDA6534, enable_remove_view_punch ? 820798728:227353254, "Uint") ;remove view punch
+		csgo.write(client + 0xD83FCC, enable_remove_view_punch ? 820658080:235690438, "Uint") ;remove view punch
 
 		csgo.write(client + 0xDAF358, (enable_force_crosshair && !LocalPlayer_IsScoped) ? 43:40, "UChar") ;force crosshair
 
@@ -316,10 +338,18 @@ IsScoped(dwEntity) {
 
 SetModelBrightness(value) {
 	VarSetCapacity(brightness, 4)
-	,NumPut(value, brightness, 0, "Float")
-	,thisPtr := engine + model_ambient_min - 0x2C
+	NumPut(value, brightness, 0, "Float")
+	thisPtr := engine + model_ambient_min - 0x2C
 	,xored := NumGet(brightness, 0, "Int") ^ thisPtr
-	,csgo.write(engine + model_ambient_min, xored, "Uint")
+	csgo.write(engine + model_ambient_min, xored, "Uint")
+}
+
+SetAspectRatio(value) {
+	VarSetCapacity(r_aspectratio, 4)
+	NumPut(value, r_aspectratio, 0, "Float")
+	thisPtr := engine + 0x58A9EC - 0x2C
+	,xored := NumGet(r_aspectratio, 0, "Int") ^ thisPtr
+	csgo.write(engine + 0x58A9EC, xored, "Uint")
 }
 
 GetGlowObj() {
@@ -331,9 +361,13 @@ Glow(glowObj, glowInd, r, g, b, a) {
 	,NumPut(g/255, Glow_Struct, 0x4, "Float")
 	,NumPut(b/255, Glow_Struct, 0x8, "Float")
 	,NumPut(a/255, Glow_Struct, 0xC, "Float")
-	csgo.writeRaw(glowObj+(glowInd*0x38)+0x8, &Glow_Struct, 16)
-	csgo.write(glowObj+(glowInd*0x38)+0x28, 1, "UChar")
-	csgo.write(glowObj+(glowInd*0x38)+0x29, 0, "UChar")
+	,csgo.writeRaw(glowObj+(glowInd*0x38)+0x8, &Glow_Struct, 16)
+	;,csgo.write(glowObj+(glowInd*0x38)+0x20, 1, "Float")
+	,csgo.write(glowObj+(glowInd*0x38)+0x28, 1, "UChar")
+	,csgo.write(glowObj+(glowInd*0x38)+0x29, 0, "UChar")
+	;,csgo.write(glowObj+(glowInd*0x38)+0x30, 2, "Uint")
+	;,csgo.write(glowObj+(glowInd*0x38)+0x23, 255, "Uint")
+	;msgbox % csgo.read(glowObj+(glowInd*0x38)+0x1C, "Uint")
 }
 
 chams(dwEntity, r, g, b) {
@@ -373,7 +407,6 @@ RCS(dwEntity, value:=0) {
 SendPacket(value) {
 	csgo.write(engine + dwbSendPackets, value, "UChar")
 }
-
 
 SplitRGBColor(RGBColor, ByRef Red, ByRef Green, ByRef Blue) {
     Red    := RGBColor >> 16 & 0xFF
@@ -435,12 +468,30 @@ settings_gui() {
 		_ImGui_BeginChild("FOV_Changer_child", 320, 37, 1)
 			_ImGui_SliderInt("FOV", fov_changer_value, 30, 150)
 		_ImGui_EndChild()
+
+		_ImGui_Checkbox("AspectRatio Changer", enable_aspect_ratio_changer)
+		_ImGui_BeginChild("AspectRatio_Charger_child", 320, 62, 1)
+			if _ImGui_Button("1:1")
+				aspect_ratio_value := 1
+			_ImGui_SameLine()
+			if _ImGui_Button("5:4")
+				aspect_ratio_value := 5/4
+			_ImGui_SameLine()
+			if _ImGui_Button("4:3")
+				aspect_ratio_value := 4/3
+			_ImGui_SameLine()
+			if _ImGui_Button("16:9")
+				aspect_ratio_value := 16/9
+			_ImGui_SliderFloat("AspectRatio", aspect_ratio_value, 1, 2)
+		_ImGui_EndChild()
 		
 		_ImGui_Checkbox("Anti Flash", enable_anti_flash)
 
 		_ImGui_Checkbox("No Smoke", enable_no_smoke)
 
 		_ImGui_Checkbox("Remove Hands", enable_remove_hands)
+
+		_ImGui_Checkbox("Remove View Punch", enable_remove_view_punch)
 
 		_ImGui_Checkbox("Radar reveal", enable_radar_reveal)
 
