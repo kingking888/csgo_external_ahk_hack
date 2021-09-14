@@ -13,7 +13,7 @@ Ahk external hack for csgo.
 * Anti Flash
 * No Smoke (Not working)
 * Remove Hands
-* Remove View Punch
+* Remove View Punch (Not working)
 * Radar reveal
 * Force Crosshair
 * Grenade Prediction
