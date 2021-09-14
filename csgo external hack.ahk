@@ -201,8 +201,8 @@ Loop {
 
 		csgo.write(LocalPlayer + 0x258, enable_remove_hands ? 0:340, "Uint") ;remove hands
 
-		csgo.write(client + 0xDA6534, enable_remove_view_punch ? 820798728:227353254, "Uint") ;remove view punch
-		csgo.write(client + 0xD83FCC, enable_remove_view_punch ? 820658080:235690438, "Uint") ;remove view punch
+		;csgo.write(client + 0xDA6534, enable_remove_view_punch ? 820798728:227353254, "Uint") ;remove view punch
+		;csgo.write(client + 0xD83FCC, enable_remove_view_punch ? 820658080:235690438, "Uint") ;remove view punch
 
 		csgo.write(client + 0xDAF358, (enable_force_crosshair && !LocalPlayer_IsScoped) ? 43:40, "UChar") ;force crosshair
 
@@ -491,7 +491,7 @@ settings_gui() {
 
 		_ImGui_Checkbox("Remove Hands", enable_remove_hands)
 
-		_ImGui_Checkbox("Remove View Punch", enable_remove_view_punch)
+		;_ImGui_Checkbox("Remove View Punch", enable_remove_view_punch)
 
 		_ImGui_Checkbox("Radar reveal", enable_radar_reveal)
 
