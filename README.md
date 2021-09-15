@@ -35,7 +35,7 @@ Ahk external hack for csgo.
 
 ## Changelog
 ### 1.1.0
-* Add Non-flickering
+* Add Non-flickering glow
 * fix remove view punch
 
 
