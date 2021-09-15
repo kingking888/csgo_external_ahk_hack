@@ -158,7 +158,7 @@ Read_csgo_offsets_from_hazedumper() {
 	whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
 	whr.Open("GET", "https://raw.githubusercontent.com/frk1/hazedumper/master/csgo.toml", true)
 	whr.Send()
-	whr.WaitForResponse()
+	whr.WaitForResponse(-1)
 	
 	CsgoOffsets := whr.ResponseText
 	if InStr(CsgoOffsets, "Not Found")
