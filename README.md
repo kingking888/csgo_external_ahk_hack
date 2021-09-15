@@ -33,4 +33,17 @@ Ahk external hack for csgo.
 ## GUI
 ![image](https://github.com/worse-666/csgo_external_ahk_hack/blob/main/setting%20gui_.png)
 
+## Changelog
+### 1.1.0
+* Add Non-flickering
+* fix remove view punch
+
+
+
+
+
+
+
+
+
 
